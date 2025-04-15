@@ -4,30 +4,51 @@
 
 
 /*global nn */
-function emoji() {
-  requestAnimationFrame(emoji)
-  const emojis = [
-    '😬','🥰','💖','🥺','😶‍🌫️','🤸'
-  ]
-  const ranEmoji = nn.random(emojis)
- 
-  const css = {
-      position : 'absolute',
-      left: nn.mouseX,
-      top: nn.mouseY
-  }
-  
-  if (nn.mouseDown) {
-    nn.create('span')
-    .content(ranEmoji)
-    .css(css)
-    .addTo('body')
-  }
+
+function spawnMole() {
+
+  const happyEmojis = '🦫';
+  const failEmoji = '❌';
+
+  const emoji = nn.create('span')
+    .content(happyEmojis)
+    .css({
+      position: 'absolute',
+      fontSize: nn.random(50, 120) + 'px',
+      cursor: '🔨',
+      left: nn.random(0, nn.width),
+      top: nn.random(0, nn.height)
+    })
+    .addTo('body');
+
+  let clicked = false;
+
+  emoji.on('click', () => {
+    clicked = true;
+    emoji.remove();
+    scheduleNextEmoji();
+  });
+
+
+  setTimeout(() => {
+    if (clicked);
+    emoji.content(failEmoji);
+    emoji.css({
+      left: nn.random(0, nn.width),
+      top: nn.random(0, nn.height)
+    })
+    setTimeout(() => {
+      emoji.remove();
+      scheduleNextEmoji();
+    }, 500);
+  }, nn.random(1000, 2000));
 }
 
-nn.on('load', emoji) 
-  // event based programming
+function scheduleNextEmoji() {
+  setTimeout(spawnMole, nn.random(500, 1500)); 
+}
 
+nn.on('load', spawnMole)
 
   
 </script>
