@@ -5,50 +5,65 @@
 
 /*global nn */
 
+let activeMole = 0;
+const maxMole = 5
+
+function changeBGColor () {
+    nn.get('body')
+      .css({
+        background: nn.randomColor()
+      })
+  }
+
 function spawnMole() {
+  if (activeMole <= maxMole);
+    const Mole = '🦫'
+    const failEmoji = '❌'
 
-  const happyEmojis = '🦫';
-  const failEmoji = '❌';
+    const emoji = nn.create('span')
+      .content(Mole)
+      .css({
+        position: 'absolute',
+        fontSize: 50,
+        left: nn.random(0, nn.width),
+        top: nn.random(0, nn.height)
+      })
+      .addTo('body')
+    
+    activeMole++
 
-  const emoji = nn.create('span')
-    .content(happyEmojis)
-    .css({
-      position: 'absolute',
-      fontSize: nn.random(50, 120) + 'px',
-      cursor: '🔨',
-      left: nn.random(0, nn.width),
-      top: nn.random(0, nn.height)
-    })
-    .addTo('body');
+    let clicked = false;
 
-  let clicked = false;
-
-  emoji.on('click', () => {
-    clicked = true;
-    emoji.remove();
-    scheduleNextEmoji();
+    emoji.on('click', () => {
+      clicked = true
+      emoji.remove()
+      activeMole--
+      scheduleNextEmoji()
   });
 
-
   setTimeout(() => {
-    if (clicked);
+    if (clicked) return;
     emoji.content(failEmoji);
-    emoji.css({
-      left: nn.random(0, nn.width),
-      top: nn.random(0, nn.height)
-    })
     setTimeout(() => {
-      emoji.remove();
-      scheduleNextEmoji();
-    }, 500);
-  }, nn.random(1000, 2000));
+      emoji.remove()
+      activeMole--
+      scheduleNextEmoji()
+    }, 500)
+  }, nn.random(2000, 3000))
 }
 
 function scheduleNextEmoji() {
-  setTimeout(spawnMole, nn.random(500, 1500)); 
+  setTimeout(spawnMole, nn.random(1000, 1800))
 }
+  
+nn.on('load', changeBGColor)
+  
+nn.on('load', () => {
+  for (let i = 0; i < 3; i++) {
+    scheduleNextEmoji()
+  }
+})
 
-nn.on('load', spawnMole)
 
   
 </script>
